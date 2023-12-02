@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
 
 import { executeInDB } from "@/lib/db";
-import { IMessage, IMessageSchema } from "@/models/chatbox";
+import { IMessage, IMessageSchema, IArrayOfMessage } from "@/models/chatbox";
 
 export const POST = async (req: NextRequest) => {
     const body = await req.json();
@@ -36,7 +36,7 @@ export const GET = async () => {
             return copyOfItem;
         });
 
-        const parsedData = IMessageSchema.safeParse(convertedData);
+        const parsedData = IArrayOfMessage.safeParse(convertedData);
 
         if (!parsedData.success){
             return [];
