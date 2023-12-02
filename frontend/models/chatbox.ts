@@ -11,6 +11,7 @@ export const IMessageSchema = z.object({
     }),
     sender: z.enum(["user", "app"]),
     id: z.string(),
+    fileId: z.string(),
 })
 
 export const IArrayOfMessage = z.array(IMessageSchema);
