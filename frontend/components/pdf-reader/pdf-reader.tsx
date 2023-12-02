@@ -29,6 +29,7 @@ import {
 } from "../ui/dropdown-menu";
 
 import SimpleBar from "simplebar-react";
+import { FullScreen } from "./full-screen";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -151,6 +152,7 @@ export const PdfReader = ({ fileId }: IPdfReaderProps) => {
           >
             <RotateCw className="w-4 h-4" />
           </Button>
+          <FullScreen fileUrl={fileUrl} />
         </div>
       </div>
 
