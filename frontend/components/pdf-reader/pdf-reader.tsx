@@ -1,6 +1,12 @@
 "use client";
 
-import { ChevronDown, ChevronUp, Loader2 } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  Loader2,
+  RotateCw,
+  Search,
+} from "lucide-react";
 import { Document, Page, pdfjs } from "react-pdf";
 
 import "react-pdf/dist/Page/AnnotationLayer.css";
@@ -15,6 +21,14 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+
+import SimpleBar from "simplebar-react";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -27,6 +41,8 @@ export const PdfReader = ({ fileId }: IPdfReaderProps) => {
 
   const [numPages, setNumPages] = useState<number>();
   const [currPage, setCurrPage] = useState<number>(1);
+  const [scale, setScale] = useState<number>(1);
+  const [rotation, setRotation] = useState<number>(0);
 
   const { ref, width } = useResizeDetector();
 
@@ -60,7 +76,10 @@ export const PdfReader = ({ fileId }: IPdfReaderProps) => {
       <div className="h-14 w-full border-b border-zinc-200 flex items-center justify-between px-2">
         <div className="flex items-center gap-1.5">
           <Button
-            onClick={() => setCurrPage((prev) => (prev > 1 ? prev - 1 : 1))}
+            onClick={() => {
+              setCurrPage((prev) => (prev > 1 ? prev - 1 : 1));
+              setValue("page", String(currPage - 1));
+            }}
             disabled={currPage <= 1}
             variant="ghost"
             aria-label="previous page"
@@ -89,33 +108,75 @@ export const PdfReader = ({ fileId }: IPdfReaderProps) => {
 
           <Button
             disabled={numPages === undefined || currPage === numPages}
-            onClick={() =>
-              setCurrPage((prev) => (prev < numPages! ? prev + 1 : numPages!))
-            }
+            onClick={() => {
+              setCurrPage((prev) => (prev < numPages! ? prev + 1 : numPages!));
+              setValue("page", String(currPage + 1));
+            }}
             variant="ghost"
             aria-label="next page"
           >
             <ChevronUp className="h-4 w-4" />
           </Button>
         </div>
+
+        <div className="space-x-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="gap-1.5" aria-label="zoom" variant="ghost">
+                <Search className="h-4 w-4" />
+                {scale * 100}%
+                <ChevronDown className="h-3 w-3 opacity-50" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onSelect={() => setScale(1)}>
+                100%
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setScale(1.5)}>
+                150%
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setScale(2)}>
+                200%
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setScale(2.5)}>
+                250%
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <Button
+            onClick={() => setRotation((prev) => prev + 90)}
+            variant={"ghost"}
+            aria-label="rotate 90 degrees"
+          >
+            <RotateCw className="w-4 h-4" />
+          </Button>
+        </div>
       </div>
 
       <div className="flex-1 w-full max-h-screen">
-        <div ref={ref}>
-          <Document
-            loading={
-              <div className="flex justify-center">
-                <Loader2 className="my-24 h-6 w-6 animate-spin" />
-              </div>
-            }
-            file={fileUrl}
-            onLoadSuccess={({ numPages }) => {
-              setNumPages(numPages);
-            }}
-          >
-            <Page width={width ? width : 870} pageNumber={currPage} />
-          </Document>
-        </div>
+        <SimpleBar autoHide={false} className="max-h-[calc(100vh-7rem)]">
+          <div ref={ref}>
+            <Document
+              loading={
+                <div className="flex justify-center">
+                  <Loader2 className="my-24 h-6 w-6 animate-spin" />
+                </div>
+              }
+              file={fileUrl}
+              onLoadSuccess={({ numPages }) => {
+                setNumPages(numPages);
+              }}
+            >
+              <Page
+                scale={scale}
+                width={width ? width : 870}
+                pageNumber={currPage}
+                rotate={rotation}
+              />
+            </Document>
+          </div>
+        </SimpleBar>
       </div>
     </div>
   );

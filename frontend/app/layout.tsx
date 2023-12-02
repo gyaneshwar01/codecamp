@@ -5,6 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 import QueryProvider from "@/components/providers/QueryProvider";
+import "simplebar-react/dist/simplebar.min.css";
 
 export const metadata: Metadata = {
   title: "Create Next App",
