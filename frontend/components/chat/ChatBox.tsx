@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Bot } from "lucide-react";
 
 import InputBox from "./InputBox";
 import MessageBox from "./MessageBox";
@@ -33,6 +34,7 @@ const ChatBox: React.FC<IProps> = ({ fileId }) => {
 
   return (
     <div className="flex flex-col h-full bg-primary-foreground">
+      <div className="w-full py-3 mb-1 bg-primary self-stretch text-lg font-semibold flex flex-row items-center gap-5 pl-4 text-white"><Bot width={35} height={35} />Chat Box</div>
       <MessageBox messages={filteredData} isPending={isPending} />
       <InputBox fileId={fileId}/>
     </div>
