@@ -20,7 +20,7 @@ const MessageItem: React.FC<IProps> = ({ message, previousMessager = null, nextM
     if (message.sender === "app") {
     return (
       <div className={`self-start flex flex-col gap-1 ${messageGap}`}>
-        <div className={`bg-primary text-black font-semibold ${appMessageRoundness} p-3`}>
+        <div className={`bg-primary text-primary-foreground font-semibold ${appMessageRoundness} p-3`}>
           {message.text}
         </div>
         {nextMessager !== "app" && <Bot width={35} height={35} className="self-start" color="black"/>}
@@ -29,7 +29,7 @@ const MessageItem: React.FC<IProps> = ({ message, previousMessager = null, nextM
   } else {
     return (
       <div className={`self-end flex flex-col gap-1 ${messageGap}`}>
-        <div className={`bg-primary text-black font-semibold ${userMessageRoundness} p-3`}>
+        <div className={`bg-primary text-primary-foreground font-semibold ${userMessageRoundness} p-3`}>
           {message.text}
         </div>
         {nextMessager !== "user" && <UserRound width={35} height={35} className="self-end" color="black"/>}

@@ -7,7 +7,7 @@ interface IProps {
 
 const MessageBox: React.FC<IProps> = ({ messages }) => {
   return (
-    <div className="flex flex-1 flex-col-reverse overflow-auto border-b-2 border-black">
+    <div className="flex flex-1 p-2 flex-col-reverse overflow-auto border-b-2 border-secondary-foreground">
       {messages.map((message, index, array) => (
         <MessageItem
           message={message}
