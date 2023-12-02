@@ -1,15 +1,18 @@
 "use client";
 
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import InputBox from "./InputBox";
 import MessageBox from "./MessageBox";
 import type { IMessage } from "@/models/chatbox";
 
-interface IProps {}
+interface IProps {
+  fileId: string;
+}
 
-const ChatBox: React.FC<IProps> = () => {
-  const { data } = useQuery<IMessage[]>({
+const ChatBox: React.FC<IProps> = ({ fileId }) => {
+  const { data, isPending } = useQuery<IMessage[]>({
     queryKey: ["chats"],
     queryFn: async () => {
       const response = await fetch("/api/chats");
@@ -20,18 +23,18 @@ const ChatBox: React.FC<IProps> = () => {
 
       const data = await response.json();
 
-  
-
       data.reverse();
 
       return data;
     }
   });
 
+  const filteredData = useMemo( () => (data || []).filter( ({ fileId: storedId }) => storedId === fileId), [data, fileId]);
+
   return (
     <div className="flex flex-col h-full bg-primary-foreground">
-      <MessageBox messages={(data || [])} />
-      <InputBox />
+      <MessageBox messages={filteredData} isPending={isPending} />
+      <InputBox fileId={fileId}/>
     </div>
   );
 };

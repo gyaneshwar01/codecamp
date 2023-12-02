@@ -9,17 +9,19 @@ import { useMutation } from "@tanstack/react-query";
 import { IMessage } from "@/models/chatbox";
 import { queryClient } from "@/lib/tanstack";
 
-interface IProps {}
-
-interface IFieldValues {
-    newMessage: string;
+interface IProps {
+  fileId: string;
 }
 
-const InputBox: React.FC<IProps> = () => {
+interface IFieldValues {
+  newMessage: string;
+}
+
+const InputBox: React.FC<IProps> = ({ fileId }) => {
 
     const { register, handleSubmit, reset } = useForm<IFieldValues>();
 
-    const { mutate } = useMutation<any, any, IMessage>({
+    const { mutate, isPending } = useMutation<any, any, IMessage>({
       mutationFn: async (message: IMessage) => {
 
         const response = await fetch('/api/chats', {
@@ -40,7 +42,15 @@ const InputBox: React.FC<IProps> = () => {
 
         const cacheData = queryClient.getQueryData<IMessage[]>(["chats"]) || [];
 
-        queryClient.setQueryData<IMessage[]>(["chats"], [message, ...cacheData]);
+        const appLoader: IMessage = {
+          id: "loader-unique",
+          text: ". . .",
+          time: new Date().toISOString(),
+          sender: "app",
+          fileId,
+        }
+
+        queryClient.setQueryData<IMessage[]>(["chats"], [appLoader, message, ...cacheData]);
 
         return cacheData;
       },
@@ -66,6 +76,7 @@ const InputBox: React.FC<IProps> = () => {
           sender: "user",
           id: nanoid(),
           time: new Date().toISOString(),
+          fileId,
         }
 
         mutate(message);
@@ -73,22 +84,19 @@ const InputBox: React.FC<IProps> = () => {
         reset();
     }
 
-    const test = () => {
-        console.log("error");
-    }
-
   return (
     <form className="flex items-center gap-2 h-fit py-4 px-2">
       <TextAreaAutoSize
         {...register("newMessage")}
         rows={1}
-        className="resize-none w-full text-black p-2 rounded-md focus:outline-none bg-input"
+        className="resize-none w-full text-black p-2 focus:ring-2 ring-primary rounded-md focus:outline-none bg-input shadow-md disabled:bg-muted disabled:hover:cursor-wait"
         onKeyDown={(event) => {
             if (event.key === "Enter" && !event.shiftKey){
                 event.preventDefault();
                 handleSubmit(sendMessage)();
             }
         }}
+        disabled={isPending}
       />
       <SendHorizontal width={35} height={35} color="black" onClick={handleSubmit(sendMessage)}/>
     </form>

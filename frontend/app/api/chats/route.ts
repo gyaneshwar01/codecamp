@@ -18,9 +18,10 @@ export const POST = async (req: NextRequest) => {
         //communicate with ankits model here.................. eg:
         const ankitsReply: IMessage = {
             id: nanoid(),
-            text: "This is a Reply",
+            text: "I'm groot",
             sender: "app",
             time: new Date().toISOString(),
+            fileId: parsedBody.fileId,
         }
 
         await executeInDB("chat", async (collection) => {
@@ -60,4 +61,27 @@ export const GET = async () => {
     });
 
     return new NextResponse(JSON.stringify(data));
+}
+
+export const DELETE = async (req: NextRequest) => {
+    const body = await req.json();
+
+    const result = await executeInDB<"OK" | "NOTOK">("chat", async (collection) => {
+        try {
+            await collection.deleteMany({ fileId: body.fileId });
+
+            return "OK";
+        } catch (error){
+            console.log("An Error occured while deleting the messages !!");
+
+            return "NOTOK"
+        }
+
+    });
+
+    if (result === 'OK'){
+        return new NextResponse("ok");
+    } else {
+        return new NextResponse("Some Error Occured !", { status: 400 });
+    }
 }
