@@ -13,6 +13,7 @@
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-slot": "^1.0.2",
+    "@tanstack/react-query": "^5.12.1",
     "@uploadthing/react": "^6.0.2",
     "axios": "^1.6.2",
     "class-variance-authority": "^0.7.0",
@@ -23,10 +24,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.48.2",
-<<<<<<< HEAD
-=======
     "react-textarea-autosize": "^8.5.3",
->>>>>>> main
     "tailwind-merge": "^2.0.0",
     "tailwindcss-animate": "^1.0.7",
     "uploadthing": "^6.0.3",
