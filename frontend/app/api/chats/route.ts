@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { nanoid } from "nanoid";
+import axios from "axios";
 
 import { executeInDB } from "@/lib/db";
 import { IMessage, IMessageSchema, IArrayOfMessage } from "@/models/chatbox";
@@ -14,11 +15,30 @@ export const POST = async (req: NextRequest) => {
         await executeInDB("chat", async (collection) => {
             await collection.insertOne(parsedBody);
         });
+
+        const config = {
+            headers: {
+              "x-api-key": "sec_iY5xsXDmgmQ93ea8XHbciw3NTQ4BIeEk",
+              "Content-Type": "application/json",
+            },
+          };
+
+        const data = {
+            sourceId: "src_EW1PmG01k0wq7YzA8P2FE",
+            messages: [
+              {
+                role: "user",
+                content: parsedBody.text,
+              },
+            ],
+          };
+
+        const response = await axios.post("https://api.chatpdf.com/v1/chats/message", data, config);
         
         //communicate with ankits model here.................. eg:
         const ankitsReply: IMessage = {
             id: nanoid(),
-            text: "I'm groot",
+            text: response.data.content,
             sender: "app",
             time: new Date().toISOString(),
             fileId: parsedBody.fileId,
@@ -27,9 +47,10 @@ export const POST = async (req: NextRequest) => {
         await executeInDB("chat", async (collection) => {
             await collection.insertOne(ankitsReply);
         });
-
-
+        
         return new NextResponse("ok");
+
+
     } catch(error){
         if (error instanceof ZodError){
             return new NextResponse("Please do not send data from postman!", { status: 401 });
