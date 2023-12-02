@@ -4,7 +4,6 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 
 import {
@@ -48,7 +47,7 @@ export const InitialModal = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const fileId = values.pdfUrl.split(".")[1].split("/").pop();
-      console.log({ fileId });
+      router.push(`/file/${fileId}`);
     } catch (error) {
       console.log(error);
     }
