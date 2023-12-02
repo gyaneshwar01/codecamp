@@ -1,3 +1,4 @@
+import { InitialModal } from "@/components/modals/initial-modal";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
@@ -5,6 +6,7 @@ export default function Home() {
     <div>
       <h1>Hello, World</h1>
       <Button variant={"destructive"}>Click Me!</Button>
+      <InitialModal />
     </div>
   );
 }
