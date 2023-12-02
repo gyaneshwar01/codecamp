@@ -1,3 +1,5 @@
+"use client";
+
 import type { IMessage } from "@/models/chatbox";
 import MessageItem from "./MessageItem";
 

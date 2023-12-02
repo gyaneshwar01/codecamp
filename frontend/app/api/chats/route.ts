@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
+import { nanoid } from "nanoid";
 
 import { executeInDB } from "@/lib/db";
 import { IMessage, IMessageSchema, IArrayOfMessage } from "@/models/chatbox";
@@ -13,6 +14,19 @@ export const POST = async (req: NextRequest) => {
         await executeInDB("chat", async (collection) => {
             await collection.insertOne(parsedBody);
         });
+        
+        //communicate with ankits model here.................. eg:
+        const ankitsReply: IMessage = {
+            id: nanoid(),
+            text: "This is a Reply",
+            sender: "app",
+            time: new Date().toISOString(),
+        }
+
+        await executeInDB("chat", async (collection) => {
+            await collection.insertOne(ankitsReply);
+        });
+
 
         return new NextResponse("ok");
     } catch(error){
@@ -45,5 +59,5 @@ export const GET = async () => {
         }
     });
 
-    return data;
+    return new NextResponse(JSON.stringify(data));
 }

@@ -40,7 +40,7 @@ const InputBox: React.FC<IProps> = () => {
 
         const cacheData = queryClient.getQueryData<IMessage[]>(["chats"]) || [];
 
-        queryClient.setQueryData<IMessage[]>(["chats"], [...cacheData, message]);
+        queryClient.setQueryData<IMessage[]>(["chats"], [message, ...cacheData]);
 
         return cacheData;
       },
