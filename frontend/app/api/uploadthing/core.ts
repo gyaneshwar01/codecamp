@@ -1,4 +1,5 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
+import axios from "axios";
 
 const f = createUploadthing();
 
@@ -22,6 +23,7 @@ export const ourFileRouter = {
     .onUploadComplete(async ({ metadata, file }) => {
       // This code RUNS ON YOUR SERVER after upload
       console.log("Upload complete for userId:", metadata.userId);
+      // api_key = sec_iY5xsXDmgmQ93ea8XHbciw3NTQ4BIeEk
 
       console.log("file url", file.url);
 
