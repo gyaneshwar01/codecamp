@@ -35,7 +35,7 @@ interface IProps {}
 
 const ChatBox: React.FC<IProps> = () => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-full p-2">
       <MessageBox messages={DUMMY_MESSAGES.reverse()} />
       <InputBox />
     </div>
