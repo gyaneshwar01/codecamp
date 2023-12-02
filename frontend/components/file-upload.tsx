@@ -2,6 +2,7 @@
 
 import { UploadDropzone } from "@/lib/uploadthing";
 import "@uploadthing/react/styles.css";
+import axios from "axios";
 import { FileIcon, X } from "lucide-react";
 
 interface FileUploadProps {
@@ -43,6 +44,25 @@ export const FileUpload = ({ onChange, value, endpoint }: FileUploadProps) => {
       endpoint={endpoint}
       onClientUploadComplete={(res) => {
         onChange(res?.[0].url); // After onChange is called, value stores the url of the image
+        const config = {
+          headers: {
+            "x-api-key": "sec_iY5xsXDmgmQ93ea8XHbciw3NTQ4BIeEk",
+            "Content-Type": "application/json",
+          },
+        };
+
+        const data = {
+          url: res?.[0].url,
+        };
+        axios
+          .post("https://api.chatpdf.com/v1/sources/add-url", data, config)
+          .then((response) => {
+            localStorage.setItem("source_id", response.data.sourceId);
+          })
+          .catch((error) => {
+            console.log("Error:", error.message);
+            console.log("Response:", error.response.data);
+          });
       }}
       onUploadError={(error: Error) => {
         console.log(error);
