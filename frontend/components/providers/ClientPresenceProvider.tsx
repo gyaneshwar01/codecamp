@@ -32,6 +32,7 @@ const ClientPresenceProvider: React.FC<IProps> = ({ children, fileId }) => {
     if (fileId === null && userData !== null && userData !== "left") {
       deleteThoseChats(userData).then(() => {
         localStorage.setItem("user", "left");
+        localStorage.setItem("source_id", "none");
       });
     }
   }, [fileId]);

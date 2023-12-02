@@ -24,9 +24,17 @@ const InputBox: React.FC<IProps> = ({ fileId }) => {
     const { mutate, isPending } = useMutation<any, any, IMessage>({
       mutationFn: async (message: IMessage) => {
 
+        const sourceId = localStorage.getItem("source_id");
+
+        if (sourceId === null){
+          console.log("Connection with the chatPDF api was broken !!");
+
+          return;
+        }
+
         const response = await fetch('/api/chats', {
           method: "POST",
-          body: JSON.stringify(message),
+          body: JSON.stringify({message, sourceId}),
           headers: {
             "Content-Type" : "application/json",
           }
