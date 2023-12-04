@@ -18,7 +18,7 @@ export const POST = async (req: NextRequest) => {
 
     const config = {
       headers: {
-        "x-api-key": "sec_iY5xsXDmgmQ93ea8XHbciw3NTQ4BIeEk",
+        "x-api-key": process.env.CHAT_PDF_API_KEY,
         "Content-Type": "application/json",
       },
     };
@@ -31,7 +31,7 @@ export const POST = async (req: NextRequest) => {
         content: text,
       }));
 
-      return messages;
+      return messages.slice(-4);
     });
 
     const data = {

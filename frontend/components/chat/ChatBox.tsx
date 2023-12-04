@@ -18,7 +18,7 @@ const ChatBox: React.FC<IProps> = ({ fileId }) => {
     queryFn: async () => {
       const response = await fetch("/api/chats");
 
-      if (!response.ok){
+      if (!response.ok) {
         return [];
       }
 
@@ -27,16 +27,22 @@ const ChatBox: React.FC<IProps> = ({ fileId }) => {
       data.reverse();
 
       return data;
-    }
+    },
   });
 
-  const filteredData = useMemo( () => (data || []).filter( ({ fileId: storedId }) => storedId === fileId), [data, fileId]);
+  const filteredData = useMemo(
+    () => (data || []).filter(({ fileId: storedId }) => storedId === fileId),
+    [data, fileId]
+  );
 
   return (
-    <div className="flex flex-col h-full bg-primary-foreground">
-      <div className="w-full py-3 mb-1 bg-primary self-stretch text-lg font-semibold flex flex-row items-center gap-5 pl-4 text-white"><Bot width={35} height={35} />Chat Box</div>
+    <div className="flex flex-col h-full bg-primary-foreground p-4">
+      <div className="w-full py-3 mb-1 bg-primary self-stretch text-lg font-semibold flex flex-row items-center gap-5 pl-4 text-white rounded-md">
+        <Bot width={35} height={35} />
+        Chat Box
+      </div>
       <MessageBox messages={filteredData} isPending={isPending} />
-      <InputBox fileId={fileId}/>
+      <InputBox fileId={fileId} />
     </div>
   );
 };

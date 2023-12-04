@@ -1,21 +1,25 @@
 import { MongoClient, Collection, Document } from "mongodb";
 
-type NameOfCollection = "chat"
+type NameOfCollection = "chat";
 
-export const executeInDB = async <T=any>( nameOfCollection: NameOfCollection ,query: (collection: Collection<Document>) => Promise<T>) => {
-    const client = await MongoClient.connect('mongodb+srv://admin:admin@swiftcluster.q0cl75k.mongodb.net/');
+export const executeInDB = async <T = any>(
+  nameOfCollection: NameOfCollection,
+  query: (collection: Collection<Document>) => Promise<T>
+) => {
+  const client = await MongoClient.connect(
+    "mongodb+srv://admin:admin@swiftsolvers.xvgjqes.mongodb.net/?retryWrites=true&w=majority"
+  );
 
-    const db = client.db("codecamp");
+  const db = client.db("codecamp");
 
-    const collection = db.collection(nameOfCollection);
+  const collection = db.collection(nameOfCollection);
 
-    const result = await query(collection);
+  const result = await query(collection);
 
-    client.close();
+  client.close();
 
-    return result
-}
-
+  return result;
+};
 
 // export const executeInDB = async <T=any>(query: (db: Db) => Promise<T>) => {
 //     const client = await MongoClient.connect('mongodb+srv://admin:admin@swiftcluster.q0cl75k.mongodb.net/');
